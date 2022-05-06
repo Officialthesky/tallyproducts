@@ -1,0 +1,9 @@
+.productCardContainer {
+  margin: 40px 40px 40px 80px;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+.productCard {
+  margin: 20px;
+}
