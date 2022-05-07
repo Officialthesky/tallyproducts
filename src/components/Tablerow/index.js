@@ -1,23 +1,22 @@
-import React from "react";
-import { Table } from "react-bootstrap";
+import React, { useState } from "react";
+import { Alert, Table } from "react-bootstrap";
 import "./index.css";
-import { useSelector, useDispatch } from "react-redux";
-import { addProductAction } from "../../redux/actions/addProductAction";
+import { useSelector } from "react-redux";
+import SureModal from "./SureModal";
 export default function ProductTable() {
-  const dispatch = useDispatch();
-
   const { product } = useSelector((state) => state.addProductReducer);
+  const [isSure, setIsSure] = useState(false);
 
-  const removeDetails = (item) => {
-    const result = product.filter(function (details) {
-      return details.productName !== item.productName;
-    });
+  const [data, setData] = useState({});
 
-    dispatch(addProductAction(result));
+  const modalHandler = (item) => {
+    setIsSure(!isSure);
+    setData(item);
   };
 
   return (
     <div className="productTable">
+      {isSure && <SureModal modalHandler={modalHandler} item={data} />}
       <Table responsive>
         <thead>
           <tr>
@@ -32,14 +31,16 @@ export default function ProductTable() {
             <tr key={index}>
               <>
                 <td className="tableImg">
-                  <img src={item.file} alt={item.productName} />
+                  {item.file.length !== 0 ? (
+                    <img src={item.file} alt={item.productName} />
+                  ) : null}
                 </td>
                 <td>{item.productName}</td>
                 <td>{item.description}</td>
                 <td>{item.price} Rs.</td>
               </>
               <td
-                onClick={() => removeDetails(item, index)}
+                onClick={() => modalHandler(item, index)}
                 className="removeProductDetails"
               >
                 Remove
@@ -48,6 +49,8 @@ export default function ProductTable() {
           ))}
         </tbody>
       </Table>
+
+      {product.length === 0 && <Alert variant="dark">ADD PRODUCTS</Alert>}
     </div>
   );
 }

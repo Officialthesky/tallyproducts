@@ -2,28 +2,28 @@ import React, { useState } from "react";
 import "./index.css";
 import { Button, Col, Form, Row } from "react-bootstrap";
 import { addProductAction } from "../../redux/actions/addProductAction";
-import { useDispatch } from "react-redux";
-import { validatePrductName } from "../../utils/helper";
+import { useDispatch, useSelector } from "react-redux";
+import { toastError, toastSuccess } from "../../utils/helper";
 import findingLengthOfString from "../../utils/helper";
 export default function Productform() {
   const dispatch = useDispatch();
+
+  const { product } = useSelector((state) => state.addProductReducer);
+
   const [productName, setProductName] = useState();
   const [price, setPrice] = useState();
   const [description, setDescription] = useState();
-  const [productDetails, setProductDetails] = useState([]);
   const [file, setFile] = useState([]);
 
   const saveProductName = (e) => {
     setProductName(e.target.value);
-    console.log(e.target.value);
   };
+
   const savePrice = (e) => {
     setPrice(e.target.value);
-    console.log(e.target.value);
   };
   const saveDescription = (e) => {
     setDescription(e.target.value);
-    console.log(e.target.value);
   };
 
   const addProduct = (e) => {
@@ -39,21 +39,16 @@ export default function Productform() {
     const productNameCheck = isNaN(productName);
     if (productNameCheck === true) {
     } else {
-      alert("Please enter a valid Product Name");
+      toastError("Please enter a valid Product Name");
       return;
     }
-    const productNameCharacterCheck = validatePrductName(productName);
-    if (productNameCharacterCheck === true) {
-    } else {
-      alert("Please enter valid Product Name");
-      return;
-    }
+
     let priceLength = findingLengthOfString(price);
     if (priceLength === 0) {
       alert("Price can't be empty");
       return;
     }
-    let tempProductDetails = productDetails;
+    let tempProductDetails = product;
     let details = {
       productName,
       price,
@@ -61,12 +56,14 @@ export default function Productform() {
       file,
     };
     tempProductDetails.push(details);
-    setProductDetails(tempProductDetails);
 
-    dispatch(addProductAction(tempProductDetails));
     setProductName("");
     setPrice("");
     setDescription("");
+    setFile("");
+
+    dispatch(addProductAction(tempProductDetails));
+    toastSuccess("Product added succesfully!");
   };
 
   const thisFileChange = (e) => {
@@ -81,6 +78,7 @@ export default function Productform() {
             <Form.Label>Product Name</Form.Label>
             <Form.Control
               type="text"
+              value={productName}
               placeholder="Enter product name"
               onChange={saveProductName}
             />
@@ -89,6 +87,7 @@ export default function Productform() {
           <Form.Group as={Col} controlId="formGridPrice">
             <Form.Label>Price</Form.Label>
             <Form.Control
+              value={price}
               type="number"
               placeholder="Enter Price"
               onChange={savePrice}
@@ -99,7 +98,12 @@ export default function Productform() {
         <Row className="mb-3">
           <Form.Group as={Col} controlId="formGridDescription">
             <Form.Label>Product description (optional)</Form.Label>
-            <Form.Control as="textarea" rows={4} onChange={saveDescription} />
+            <Form.Control
+              value={description}
+              as="textarea"
+              rows={4}
+              onChange={saveDescription}
+            />
           </Form.Group>
 
           <Form.Group as={Col} controlId="formGridImage">

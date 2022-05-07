@@ -1,7 +1,6 @@
 import { ADD_PRODUCT, DELETE_PRODUCT } from "../actions/types";
 const initialState = {
   product: [],
-  updatedContact: [],
 };
 
 const addProductReducer = (state = initialState, action) => {
@@ -11,9 +10,6 @@ const addProductReducer = (state = initialState, action) => {
         ...state,
         product: action.payload,
       };
-    case DELETE_PRODUCT: {
-      return { ...state, updatedContact: action.payload };
-    }
     default:
       return state;
   }
