@@ -1,4 +1,6 @@
 .navName {
   margin-left: 30px;
   cursor: pointer;
+  flex-direction: column !important;
+  margin-top: 10px !important;
 }

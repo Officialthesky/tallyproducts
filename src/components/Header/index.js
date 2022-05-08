@@ -1,22 +1,22 @@
 import React, { useState } from "react";
 import "./index.css";
 import { Nav, Container, Navbar } from "react-bootstrap";
-import { useNavigate } from "react-router";
-import { activeCss } from "./activeCss";
+import { useNavigate, useLocation } from "react-router";
 import { navData } from "./navData";
+import BottomBorder from "./BottomBorder";
 export default function Header() {
-  const [selectedTab, setSelectedTab] = useState(1);
   let navigate = useNavigate();
-
+  let { pathname } = useLocation();
   const goToTab = (index) => {
-    if (index === 0) {
+    if (index === 1) {
       navigate(`/`);
-      setSelectedTab(0);
     } else {
       navigate(`/manage-products`);
-      setSelectedTab(1);
     }
   };
+  let isHomeActive = pathname === "/";
+  let isManageAcive = pathname === "/manage-products";
+
   return (
     <Navbar
       collapseOnSelect
@@ -27,17 +27,16 @@ export default function Header() {
     >
       <Container>
         {navData.map((item, index) => {
-          let isActive = selectedTab === index;
           return (
-            <div key={index}>
-              <Nav
-                className="navName"
-                onClick={() => goToTab(index)}
-                style={isActive ? activeCss : {}}
-              >
-                {item.navName}
-              </Nav>
-            </div>
+            <Nav
+              key={index}
+              className="navName"
+              onClick={() => goToTab(item.id)}
+            >
+              {item.navName}
+              {index === 0 && isHomeActive && <BottomBorder display={true} />}
+              {index === 1 && isManageAcive && <BottomBorder display={true} />}
+            </Nav>
           );
         })}
 
