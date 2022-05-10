@@ -1,4 +1,4 @@
-import { ADD_PRODUCT, DELETE_PRODUCT } from "../actions/types";
+import { ADD_PRODUCT } from "../actions/types";
 const initialState = {
   product: [],
 };
